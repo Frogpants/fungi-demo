@@ -114,8 +114,9 @@ int main()
         // Enemy Updating
         for (auto& e : enemies) {
             e.target = player.pos;
-            vec2 dir = normalize(e.target - e.pos);
-            e.pos += dir * e.speed;
+            vec2 dir = e.target - e.pos;
+            dir = normalize(dir);
+            e.pos += dir;
 
             DrawQuad(e.pos, 12, 1, 0, 0);
         }
