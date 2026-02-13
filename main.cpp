@@ -65,8 +65,8 @@ void DrawHealthBar(float health)
 
     float hpPercent = health / 100.0f;
 
-    Image::DrawRect(vec2(-screen.x + 20, screen.x - 40), vec2(width, height), 1, 0, 0);
-    Image::DrawRect(vec2(-screen.x + 20, screen.x - 40), vec2(width * hpPercent, height), 0, 1, 0);
+    Image::DrawRect(vec2(-screen.x + 20, screen.y - 40), vec2(width, height), 1, 0, 0);
+    Image::DrawRect(vec2(-screen.x + 20, screen.y - 40), vec2(width * hpPercent, height), 0, 1, 0);
 }
 
 
@@ -113,12 +113,13 @@ int main()
     glOrtho(-screen.x, screen.x, -screen.y, screen.y, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
 
-    //Spawn enemies
+    
     for (int i = 0; i < 25; i++) {
         Enemy e;
         e.pos = vec2(rand() % 600 - 300, rand() % 600 - 300);
         enemies.push_back(e);
     }
+    
 
     Manager::Init(window);
     Image::Init();
@@ -219,6 +220,8 @@ int main()
 
         player.pos = player.pos + force * 2.0;
         Image::Draw(playerTex, player.pos, 150, 0.0);
+
+        player.health = clamp(0.0, 100.0, player.health);
 
         // UI
         glLoadIdentity();
