@@ -63,9 +63,19 @@ namespace Mouse {
         glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetScrollCallback(window, ScrollCallback);
 
-        glfwGetCursorPos(window, &lastX, &lastY);
-        mouseX = lastX;
-        mouseY = lastY;
+        // Center cursor in the window on init so it doesn't start at (0,0)
+        int w = 0, h = 0;
+        glfwGetWindowSize(window, &w, &h);
+        double centerX = w / 2.0;
+        double centerY = h / 2.0;
+
+        glfwSetCursorPos(window, centerX, centerY);
+
+        // Initialize internal positions to the centered cursor
+        lastX = centerX;
+        lastY = centerY;
+        mouseX = centerX;
+        mouseY = centerY;
     }
 
     void Update() {
