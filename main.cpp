@@ -1,3 +1,6 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -116,7 +119,23 @@ int main()
     
     for (int i = 0; i < 25; i++) {
         Enemy e;
-        e.pos = vec2(rand() % 600 - 300, rand() % 600 - 300);
+        vec2 pos = vec2(0.0);
+        if (randInt(0, 1) == 1) {
+            pos.x = randInt(-screen.x, screen.x);
+            if (randInt(0,1)) {
+                pos.y = screen.y + randInt(0, 100);
+            } else {
+                pos.y = -(screen.y + randInt(0, 100));
+            }
+        } else {
+            pos.y = randInt(-screen.y, screen.y);
+            if (randInt(0,1)) {
+                pos.x = screen.x + randInt(0, 100);
+            } else {
+                pos.x = -(screen.x + randInt(0, 100));
+            }
+        }
+        e.pos = pos + camera.pos;
         enemies.push_back(e);
     }
     
@@ -138,7 +157,7 @@ int main()
 
         tick += 1;
 
-        // Apply camera
+
         camera.target = player.pos;
         camera.follow();
         glTranslatef(-camera.pos.x, -camera.pos.y, 0);
@@ -147,7 +166,8 @@ int main()
         player.pos = player.pos + player.vel;
 
         if (Mouse::IsDown(0)) {
-            if (tick % 100 == 0) {
+            player.cooldown = clamp(0.0, 100.0, player.cooldown);
+            if (player.cooldown == 0.0) {
                 Bullet b;
                 b.pos = player.pos;
 
@@ -156,6 +176,10 @@ int main()
                 b.dir = pointAt(player.pos, mouseWorld);
 
                 bullets.push_back(b);
+                player.cooldown = 100.0;
+            }
+            if (tick % 50 == 0) {
+                player.cooldown -= 100.0;
             }
         }
 
@@ -173,7 +197,7 @@ int main()
             Image::Draw(bulletTex, b.pos, 100, b.dir);
         }
 
-        // Enemy Updating
+
         for (auto& e : enemies) {
             e.target = player.pos;
 
@@ -197,11 +221,9 @@ int main()
 
                 force = force + normalize(diff) / dist;
 
-                player.health -= 1.0;
-                // vec2 diff = e.pos - player.pos;
-                // float dist = length(diff) * 0.01;
-
-                // force = force + normalize(diff) / dist;
+                if (tick % 100 == 0) {
+                    player.health -= 10.0;
+                }
             }
 
             //e.pos = e.pos + force * e.speed * 4.0;

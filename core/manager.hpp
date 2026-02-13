@@ -37,3 +37,7 @@ inline float pointAt(vec2 obj1, vec2 obj2) {
     vec2 diff = obj2 - obj1;
     return atan2(diff.y, diff.x);
 }
+
+inline int randInt(int a, int b) {
+    return floor((rand() % (b - a + 1)) + a);
+}
