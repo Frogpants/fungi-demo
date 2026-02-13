@@ -6,9 +6,11 @@
 #include "mouse/mouse.hpp"
 #include "essentials.hpp"
 
+#include "../game/bullet.hpp"
+
 inline float gamemode = 0.0f;
 
-inline vec2 screen = vec2(640.0);
+inline vec2 screen = vec2(1280.0, 720.0);
 
 // namespace KeyMaps {
 //     inline controls = 
@@ -29,4 +31,9 @@ namespace Manager {
         Input::Update();
         Mouse::Update();
     }
+}
+
+inline float pointAt(vec2 obj1, vec2 obj2) {
+    vec2 diff = obj2 - obj1;
+    return atan2(diff.y, diff.x);
 }

@@ -13,22 +13,22 @@ struct Camera {
     vec2 target;
 
     void follow() {
-        pos += (target - pos) * 0.1;
+        pos = pos + (target - pos) * 0.1;
 
-        // if (std::abs(pos.x) > screen.x) {
-        //     if (pos.x > 0.0) {
-        //         pos.x = screen.x;
-        //     } else {
-        //         pos.x = -screen.x;
-        //     }
-        // }
+        if (std::abs(pos.x) > screen.x) {
+            if (pos.x > 0.0) {
+                pos.x = screen.x;
+            } else {
+                pos.x = -screen.x;
+            }
+        }
 
-        // if (std::abs(pos.y) > screen.y) {
-        //     if (pos.y > 0.0) {
-        //         pos.y = screen.y;
-        //     } else {
-        //         pos.y = -screen.y;
-        //     }
-        // }
+        if (std::abs(pos.y) > screen.y) {
+            if (pos.y > 0.0) {
+                pos.y = screen.y;
+            } else {
+                pos.y = -screen.y;
+            }
+        }
     }
 };
