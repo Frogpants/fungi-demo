@@ -119,7 +119,7 @@ int main()
     glMatrixMode(GL_MODELVIEW);
 
     //Spawn enemies
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 25; i++) {
         Enemy e;
         e.pos = vec2(rand() % 600 - 300, rand() % 600 - 300);
         enemies.push_back(e);
@@ -201,7 +201,13 @@ int main()
                 float dist = length(diff) * 0.01;
 
                 force = force + normalize(diff) / dist;
+                // vec2 diff = e.pos - player.pos;
+                // float dist = length(diff) * 0.01;
+
+                // force = force + normalize(diff) / dist;
             }
+
+            //e.pos = e.pos + force * e.speed * 4.0;
 
             for (auto& b : bullets) {
                 if (BallCollide(e.pos, e.dim, b.pos, b.dim)) {
