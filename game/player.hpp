@@ -6,7 +6,7 @@
 
 struct Player {
     vec2 pos = vec2(0.0);
-    vec2 dim = vec2(15.0);
+    vec2 dim = vec2(45.0);
     vec2 vel = vec2(0.0);
     float health = 100.0;
 

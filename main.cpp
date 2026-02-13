@@ -70,26 +70,21 @@ void DrawHealthBar(float health)
 }
 
 
-vec2 GetMouseWorld()
-{
-    float near = 0.1f;
+vec2 GetMouseWorld(GLFWwindow* window) {
+    vec2 world;
 
-    float ndcX = (2.0f * Mouse::X()) / 1280.0f - 1.0f;
-    float ndcY = 1.0f - (2.0f * Mouse::Y()) / 720.0f;
+    int windowWidth, windowHeight;
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-    float viewX = ndcX * screen.x;
-    float viewY = ndcY * screen.y;
+    // Normalize mouse coordinates to -screen.x → screen.x and -screen.y → screen.y
+    float mouseNDC_X = (float)Mouse::X() / windowWidth;  // 0 → 1
+    float mouseNDC_Y = (float)Mouse::Y() / windowHeight; // 0 → 1
 
-    float scale = camera.zoom / near;
+    // Convert to ortho coordinates
+    world.x = (mouseNDC_X * 2.0f - 1.0f) * screen.x + camera.pos.x;
+    world.y = (1.0f - mouseNDC_Y * 2.0f) * screen.y + camera.pos.y;
 
-    viewX *= scale;
-    viewY *= scale;
-
-    vec2 mouseWorld;
-    mouseWorld.x = viewX + camera.pos.x;
-    mouseWorld.y = viewY + camera.pos.y;
-
-    return mouseWorld;
+    return world;
 }
 
 
@@ -152,15 +147,12 @@ int main()
 
         if (Mouse::IsDown(0)) {
             if (tick % 100 == 0) {
-
                 Bullet b;
                 b.pos = player.pos;
 
-                vec2 mouseCentered;
-                mouseCentered.x = Mouse::X() - screen.x * 0.5f;
-                mouseCentered.y = screen.y * 0.5f - Mouse::Y();
+                vec2 mouseWorld = GetMouseWorld(window);
 
-                b.dir = pointAt(player.pos, mouseCentered);
+                b.dir = pointAt(player.pos, mouseWorld);
 
                 bullets.push_back(b);
             }

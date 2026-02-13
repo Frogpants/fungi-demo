@@ -37,10 +37,10 @@ namespace {
             state.down = true;
             state.pressed = true;
 
-            if (!mouseLocked && button == GLFW_MOUSE_BUTTON_LEFT) {
-                mouseLocked = true;
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
+            // if (!mouseLocked && button == GLFW_MOUSE_BUTTON_LEFT) {
+            //     mouseLocked = true;
+            //     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            // }
         }
         else if (action == GLFW_RELEASE) {
             state.down = false;

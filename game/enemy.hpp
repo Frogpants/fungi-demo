@@ -9,7 +9,7 @@
 
 struct Enemy {
     vec2 pos = vec2(0.0);
-    vec2 dim = vec2(12.0);
+    vec2 dim = vec2(45.0);
     float health = 100.0;
 
     float cooldown = 0.0;
