@@ -7,24 +7,27 @@
 struct Player {
     vec2 pos = vec2(0.0);
     vec2 dim = vec2(15.0);
+    vec2 vel = vec2(0.0);
     float health = 100.0;
 
     float cooldown = 0.0;
 
-    float speed = 1.0;
+    float speed = 0.5;
 
     void controls() {
         if (Input::IsDown("w")) {
-            pos.y += speed;
+            vel.y += speed;
         }
         if (Input::IsDown("s")) {
-            pos.y -= speed;
+            vel.y -= speed;
         }
         if (Input::IsDown("d")) {
-            pos.x += speed;
+            vel.x += speed;
         }
         if (Input::IsDown("a")) {
-            pos.x -= speed;
+            vel.x -= speed;
         }
+
+        vel = vel * 0.7;
     }
 };

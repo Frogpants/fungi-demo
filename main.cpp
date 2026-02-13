@@ -14,6 +14,7 @@
 #include "core/manager.hpp"
 #include "core/essentials.hpp"
 #include "core/collision.hpp"
+#include "core/images/image.hpp"
 
 Player player;
 Camera camera;
@@ -64,23 +65,8 @@ void DrawHealthBar(float health)
 
     float hpPercent = health / 100.0f;
 
-    // Background
-    glColor3f(0.2f, 0.2f, 0.2f);
-    glBegin(GL_QUADS);
-        glVertex2f(-screen.x + 20, screen.y - 40);
-        glVertex2f(-screen.x + 20 + width, screen.y - 40);
-        glVertex2f(-screen.x + 20 + width, screen.y - 40 + height);
-        glVertex2f(-screen.x + 20, screen.y - 40 + height);
-    glEnd();
-
-    // Health
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_QUADS);
-        glVertex2f(-screen.x + 20, screen.y - 40);
-        glVertex2f(-screen.x + 20 + width * hpPercent, screen.y - 40);
-        glVertex2f(-screen.x + 20 + width * hpPercent, screen.y - 40 + height);
-        glVertex2f(-screen.x + 20, screen.y - 40 + height);
-    glEnd();
+    Image::DrawRect(vec2(-screen.x + 20, screen.x - 40), vec2(width, height), 1, 0, 0);
+    Image::DrawRect(vec2(-screen.x + 20, screen.x - 40), vec2(width * hpPercent, height), 0, 1, 0);
 }
 
 
@@ -114,7 +100,7 @@ int main()
     if (!glfwInit())
         return -1;
 
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "2.5D Roguelike Demo", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(screen.x, screen.y, "Roguelike Demo", nullptr, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -122,6 +108,7 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // Enable VSync (locks to monitor refresh, usually 60 FPS)
 
     // Setup 2D projection
     glMatrixMode(GL_PROJECTION);
@@ -131,19 +118,24 @@ int main()
     glOrtho(-screen.x, screen.x, -screen.y, screen.y, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
 
-    // Spawn enemies
-    // for (int i = 0; i < 10; i++) {
-    //     Enemy e;
-    //     e.pos = vec2(rand() % 600 - 300, rand() % 600 - 300);
-    //     enemies.push_back(e);
-    // }
+    //Spawn enemies
+    for (int i = 0; i < 100; i++) {
+        Enemy e;
+        e.pos = vec2(rand() % 600 - 300, rand() % 600 - 300);
+        enemies.push_back(e);
+    }
 
     Manager::Init(window);
+    Image::Init();
+
+    GLuint playerTex = Image::Load("assets/agent-bullet.png");
+    GLuint enemyTex = Image::Load("assets/agent-enemy.png");
+    GLuint bulletTex = Image::Load("assets/bullet.png");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-        glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+        glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glLoadIdentity();
@@ -156,6 +148,7 @@ int main()
         glTranslatef(-camera.pos.x, -camera.pos.y, 0);
 
         player.controls();
+        player.pos = player.pos + player.vel;
 
         if (Mouse::IsDown(0)) {
             if (tick % 100 == 0) {
@@ -165,12 +158,11 @@ int main()
 
                 vec2 mouseCentered;
                 mouseCentered.x = Mouse::X() - screen.x * 0.5f;
-                mouseCentered.y = -screen.y * 0.5f + Mouse::Y();
+                mouseCentered.y = screen.y * 0.5f - Mouse::Y();
 
                 b.dir = pointAt(player.pos, mouseCentered);
 
                 bullets.push_back(b);
-                DrawCircle(b.pos, 10.0, 1, 1, 1);
             }
         }
 
@@ -183,7 +175,7 @@ int main()
                     bullets.erase(bullets.begin() + findIndex(bullets, b));
                 }
             }
-            DrawCircle(b.pos, 2.0, 1, 1, 1);
+            Image::Draw(bulletTex, b.pos, 100, b.dir);
         }
 
         // Enemy Updating
@@ -198,8 +190,8 @@ int main()
 
                 vec2 diff = e.pos - t.pos;
                 float dist = length(diff) * 0.1;
-
-                separation = separation + normalize(diff) / dist;
+                if (BallCollide(e.pos, e.dim * 12.0, t.pos, t.dim * 12.0))
+                    separation = separation + normalize(diff) / dist;
             }
 
             e.pos = e.pos + separation * e.speed * 4.0;
@@ -218,11 +210,11 @@ int main()
                 }
             }
 
-            DrawQuad(e.pos, 12, 1, 0, 0);
+            Image::Draw(enemyTex, e.pos, 150);
         }
 
         player.pos = player.pos + force * 2.0;
-        DrawQuad(player.pos, 15, 0, 1, 0);
+        Image::Draw(playerTex, player.pos, 150, 0.0);
 
         // UI
         glLoadIdentity();

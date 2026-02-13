@@ -542,9 +542,9 @@ inline vec4 abs(const vec4& v) {
 }
 
 
-inline float floor(float x) {
-    return std::floor(x);
-}
+// inline float floor(float x) {
+//     return std::floor(x);
+// }
 
 inline vec2 floor(const vec2& v) {
     vec2 n(std::floor(v.x), std::floor(v.y));
@@ -562,9 +562,9 @@ inline vec4 floor(const vec4& v) {
 }
 
 
-inline float ceil(float x) {
-    return std::ceil(x);
-}
+// inline float ceil(float x) {
+//     return std::ceil(x);
+// }
 
 inline vec2 ceil(const vec2& v) {
     vec2 n(std::ceil(v.x), std::ceil(v.y));
@@ -682,17 +682,17 @@ inline vec4 degrees(const vec4& v) {
 }
 
 
-inline float sin(float x) {
-    return std::sin(x);
-}
+// inline float sin(float x) {
+//     return std::sin(x);
+// }
 
-inline float cos(float x) {
-    return std::cos(x);
-}
+// inline float cos(float x) {
+//     return std::cos(x);
+// }
 
-inline float tan(float x) {
-    return std::tan(x);
-}
+// inline float tan(float x) {
+//     return std::tan(x);
+// }
 
 
 inline float mix(float x, float y, float a) {
@@ -700,9 +700,9 @@ inline float mix(float x, float y, float a) {
 }
 
 
-inline float sqrt(float x) {
-    return std::sqrt(x);
-}
+// inline float sqrt(float x) {
+//     return std::sqrt(x);
+// }
 
 inline vec2 sqrt(const vec2& v) {
     return vec2(sqrt(v.x), sqrt(v.y));

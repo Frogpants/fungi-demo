@@ -7,7 +7,7 @@ struct Bullet {
     vec2 dim = vec2(10.0);
     float dir = 0.0;
 
-    float speed = 1.0;
+    float speed = 2.0;
 
     void move() {
         pos = pos + vec2(sin(dir), cos(dir)) * speed;
