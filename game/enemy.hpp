@@ -14,7 +14,7 @@ struct Enemy {
 
     float cooldown = 0.0;
 
-    float speed = 0.5;
+    float speed = 0.4;
 
     vec2 target;
 

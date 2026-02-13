@@ -162,10 +162,12 @@ int main()
 
         for (auto& b : bullets) {
             b.move();
-            if (abs(b.pos.x) >= screen.x) {
-                if (abs(b.pos.y) >= screen.y) {
-                    bullets.erase(bullets.begin() + findIndex(bullets, b));
-                }
+            if (abs(b.pos.x - camera.pos.x) >= screen.x) {
+                bullets.erase(bullets.begin() + findIndex(bullets, b));
+            }
+
+            if (abs(b.pos.y - camera.pos.y) >= screen.y) {
+                bullets.erase(bullets.begin() + findIndex(bullets, b));
             }
             Image::Draw(bulletTex, b.pos, 100, b.dir);
         }
@@ -193,6 +195,8 @@ int main()
                 float dist = length(diff) * 0.01;
 
                 force = force + normalize(diff) / dist;
+
+                player.health -= 1.0;
                 // vec2 diff = e.pos - player.pos;
                 // float dist = length(diff) * 0.01;
 
@@ -203,6 +207,8 @@ int main()
 
             for (auto& b : bullets) {
                 if (BallCollide(e.pos, e.dim, b.pos, b.dim)) {
+                    player.coins += 1.0;
+
                     enemies.erase(enemies.begin() + findIndex(enemies, e));
                     bullets.erase(bullets.begin() + findIndex(bullets, b));
                 }
