@@ -1,8 +1,6 @@
 #!/bin/bash
 
-echo "========================================"
 echo " Building fungi-demo Windows Executable "
-echo "========================================"
 
 DIST_DIR="dist"
 EXE_NAME="fungi-demo.exe"
